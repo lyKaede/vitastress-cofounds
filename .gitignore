@@ -1,0 +1,12 @@
+# dataset: non va mai caricato nella repo
+VitaStress/
+data/
+
+# file temporanei di python e jupyter
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# file di sistema
+.DS_Store
+Thumbs.db
