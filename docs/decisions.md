@@ -42,12 +42,21 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **17. Riferimento: Tabella 4 del paper (89%).** La Tabella 2 ha il titolo del binario ma i numeri del ternario.
 
+## Le due persone difficili
+
+**18. `ddca342b`: braccialetto orientato al contrario.** A riposo è l'unica persona con asse X positivo (+442) e asse Z negativo (−106); per le altre 20 X va da −502 a −68 e Z da +79 a +492. La gravità misurata è normale (462), quindi il sensore funziona. Il modello sbaglia 18 riposi su 20 perché usa la postura del polso. Verifica (addestrando sulle altre 20): senza le medie dell'accelerometro 0,75, con solo la fisiologia 0,91. Per ora lasciata così; la magnitudine del movimento (passo 4) non dipende dall'orientamento.
+
+**19. `a5e823ad`: errori dovuti alla normalizzazione.** Senza riposo, la media della persona è calcolata solo sulle fasi di stress: metà delle righe di stress finisce sotto la media e viene scambiata per riposo (7 errori su 11 nel calcolo, 5 su 14 nella corsa). Con solo la fisiologia resta bassa (0,69). Rispondere sempre «stress» su questa persona darebbe 1,00: il suo risultato non è confrontabile.
+
 ## Da decidere
 
 - Fase di preparazione del discorso: conta come stress? (per ora esclusa)
 - Standardizzazione del sudore con la mediana invece della media (passo 4)
-- Compito senza corsa (riposo contro calcolo + discorso): in attesa della risposta della prof
-- Persona `a5e823ad`: accuracy 0,63, da capire se dipende dall'assenza del riposo
+- Passo 3 (confronto fisiologia / movimento): da chiedere alla prof prima di procedere
+- Compito senza corsa (riposo contro calcolo + discorso): da proporre alla prof come domanda
+- `ddca342b` e `a5e823ad`: tenerle o escluderle dalla valutazione (da chiedere alla prof)
+- Normalizzazione per persona: limite dichiarato o variante con il solo riposo (calibrazione)
+- Finestre da 60 s per le feature del battito
 
 ## Note di metodo
 

@@ -28,6 +28,15 @@ Risultati in linea con il paper; la differenza rientra nella variabilità fra so
 
 ![Accuracy noi contro paper](figures/accuracy_noi_vs_paper.png)
 
+### Le due persone difficili
+
+19 persone su 21 sono sopra 0,85; due si fermano a 0,62–0,63 e sbagliano in modo opposto:
+
+- **`ddca342b`** ha il braccialetto orientato al contrario (a riposo asse X positivo e asse Z negativo, per tutti gli altri il contrario). Il modello sbaglia 18 riposi su 20 perché usa la postura del polso; con solo battito, sudore e temperatura arriva a 0,91.
+- **`a5e823ad`** non ha un riposo valido (82 minuti, escluso): la normalizzazione per persona è calcolata solo sulle fasi di stress e il modello scambia lo stress per riposo.
+
+Il movimento vale il 61% dell'importanza delle feature di Random Forest, di cui il 29% dalle sole medie dell'accelerometro (la postura).
+
 ## Dataset
 
 [VitaStress](https://github.com/paulvincenz/VitaStress) — Schreiber et al., ICMI 2025.
@@ -42,13 +51,15 @@ Licenza del dataset: CC BY-NC 4.0.
 ```
 notebooks/
   01_figura4.ipynb                   esplorazione e riproduzione della Figura 4
-  02_tabella_classificatore.ipynb    tabella degli autori, classificatori, grafici
+  02_tabella_classificatore.ipynb    tabella degli autori, classificatori, grafici,
+                                     analisi delle due persone difficili
 docs/
   piano.md                           piano di lavoro
   feature_autori.md                  feature usate dagli autori
   decisions.md                       decisioni prese e motivi
   logbook.md                         diario di lavoro
   guide/                             spiegazione passo per passo di ogni notebook
+                                     e aggiornamento per la prof
 figures/                             grafici prodotti
 ```
 

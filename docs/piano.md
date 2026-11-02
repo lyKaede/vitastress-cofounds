@@ -10,10 +10,13 @@
 - Esplorazione e controllo del dataset
 - Figura 4 riprodotta su 21 soggetti, differenze dal paper spiegate
 - Feature usate dagli autori → `docs/feature_autori.md`
+- Passi 1–2 (notebook 02, guida PDF dei passi 1-2)
+- Analisi delle due persone su cui il modello sbaglia (notebook 02, Parte 4)
+- Aggiornamento e domande per la prof → `docs/guide/03_preparazione_call.pdf`
 
 ---
 
-## Passo 1 — Rifare la loro tabella
+## Passo 1 — Rifare la loro tabella ✅
 **Obiettivo:** gli stessi dati usati dagli autori.
 - una riga ogni 30 secondi, per tutte le persone
 - colonne: `bpm`, `stress_skin`, `temp_sk1`, media / dev. standard / varianza di accX, accY, accZ
@@ -27,30 +30,27 @@
 
 **Fatto quando:** tabella pronta, Figura 3 fatta, decisione sui mancanti scritta.
 
-## Passo 2 — Il loro classificatore binario
+## Passo 2 — Il loro classificatore binario ✅
 **Obiettivo:** avvicinarsi all'89% (Tabella 4).
 - Random Forest, kNN, LDA, Decision Tree, Logistic Regression, XGBoost
 - accuracy e F1 per ogni classificatore
 
 **Fatto quando:** una tabella con i risultati di tutti e sei.
 
-## Passo 3 — Confronto con il paper e confondente movimento
-**Obiettivo:** capire se riproduciamo il paper e quanto pesa il movimento.
+## Passo 3 — Confronto con il paper: fisiologia e movimento
+*In sospeso: da chiedere alla prof alla call prima di farlo.*
+
+**Obiettivo:** completare la replica con le altre righe della Tabella 4 del paper.
 
 | esperimento | dati | compito |
 |---|---|---|
 | A | tutti i segnali | riposo vs calcolo + discorso + corsa |
 | B | solo fisiologia | riposo vs calcolo + discorso + corsa |
 | C | solo movimento | riposo vs calcolo + discorso + corsa |
-| **D** *(nuovo)* | tutti i segnali | **riposo vs calcolo + discorso** (senza corsa) |
-| **E** *(nuovo)* | solo movimento | **riposo vs calcolo + discorso** (senza corsa) |
 
-- A, B, C si confrontano con le tabelle del paper
-- D ed E dicono se il modello riconosce lo stress o il movimento: senza la corsa il movimento non può aiutare
+- A, B, C si confrontano con la Tabella 4 del paper
 
-**Fatto quando:** tabella "noi contro loro" + risultato senza corsa.
-
-*→ Qui la relazione è già valida.*
+**Fatto quando:** tabella "noi contro loro".
 
 ## Passo 4 — Feature dai dati grezzi
 **Obiettivo:** il contributo nuovo del tirocinio. Finestre da 60 secondi.
@@ -69,9 +69,9 @@ Per il PPG: misurare quanta parte del segnale è recuperabile, anche quella è u
 **Obiettivo:** capire se le nostre feature aiutano.
 - stesso codice del passo 2
 - aggiungere un gruppo di feature alla volta
-- ripetere gli esperimenti A–E del passo 3
+- ripetere gli esperimenti del passo 3
 
-**Fatto quando:** si sa quali feature servono, **soprattutto nel compito senza corsa**.
+**Fatto quando:** si sa quali feature servono.
 
 ## Passo 6 — Rete neurale (MLP)
 **Obiettivo:** confrontare una rete neurale con i classificatori classici.
@@ -88,6 +88,11 @@ Per il PPG: misurare quanta parte del segnale è recuperabile, anche quella è u
 ---
 
 ## Da confermare con la prof
+- Il passo 3 (tutti / solo fisiologia / solo movimento) va fatto? Sono le altre righe della Tabella 4 del paper, quindi rientrerebbe nella replica
+- Ha senso provare anche un compito **senza corsa** (riposo contro calcolo + discorso)? Nella corsa il movimento rende lo stress ovvio; togliendola si vedrebbe se il modello riconosce lo stress o solo il movimento
+- Normalizzazione per persona: dichiararla come limite o provare una variante con il solo riposo (calibrazione)?
+- `ddca342b` e `a5e823ad`: tenerle o escluderle dalla valutazione?
+- Finestre da 60 s: rifare anche la tabella degli autori a 60 s?
 - Tabella 2 o Tabella 4? (la 2 ha il titolo del binario ma probabilmente i numeri del ternario)
 
 ## Da provare, non urgente

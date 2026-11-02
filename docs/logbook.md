@@ -55,5 +55,31 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 - I titoli delle tabelle del paper sono scambiati: il binario all'89% è la Tabella 4
 
 **Prossimo passo**
-- Passo 3: confronto tutti / solo fisiologia / solo movimento
-- In attesa della risposta della prof sul compito senza corsa
+- Call di aggiornamento con la prof
+
+---
+
+## Settimana 4 — Preparazione alla call con la prof
+
+**Fatto**
+- Riletto lo scambio di mail: il piano concordato è replica → feature dai grezzi → MLP
+- Pronta la lista delle feature usate dagli autori, chiesta dalla prof (`feature_autori.md`)
+- Preparata la call di aggiornamento sui passi 1 e 2
+- Analizzate le due persone su cui il modello sbaglia (notebook 02, Parte 4), con l'aiuto di Claude
+- Mandato alla prof il documento di aggiornamento e chiesto un incontro
+
+**Scoperto**
+- `ddca342b` ha il braccialetto orientato al contrario: il modello sbaglia 18 riposi su 20 perché usa la postura del polso; con solo la fisiologia arriva a 0,91
+- `a5e823ad` sbaglia per la normalizzazione: senza riposo, la media è calcolata solo sullo stress
+- Importanza per gruppo: battito 0,35, sudore + temperatura 0,04, medie dell'accelerometro 0,29, std e varianza 0,32
+
+**Da chiedere alla prof**
+- Il confronto tutti / solo fisiologia / solo movimento va fatto? Non era nel piano concordato, ma sono righe della Tabella 4 del paper
+- Ha senso un compito senza corsa, per capire se il modello riconosce lo stress o solo il movimento?
+- Via libera alle feature nuove dai segnali grezzi e ordine con cui calcolarle
+- Tabella 2 o Tabella 4 come riferimento
+- Normalizzazione per persona: limite o variante con il solo riposo?
+- Finestre da 60 secondi
+
+**Prossimo passo**
+- Dopo la call: passo 3 se confermato, altrimenti direttamente passo 4
