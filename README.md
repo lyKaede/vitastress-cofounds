@@ -2,12 +2,13 @@
 
 Tirocinio · Interfacce uomo-macchina · Università degli Studi dell'Insubria · 2026
 
-**Stato:** in corso. Replica del classificatore degli autori completata (passi 1 e 2); passo 3 in attesa di conferma della prof.
+**Stato:** in corso. Binario replicato (passi 1 e 2); classificatore ternario, ablation e prima MLP fatti (passo 3). Prossimo: feature dai segnali grezzi.
 
 > **In breve**
 > - Il classificatore binario degli autori è **replicato**: Random Forest **0,93** contro l'**0,89** del paper.
 > - Il modello si appoggia molto al **movimento** (61% dell'importanza), e quasi metà di quel peso viene dalla **postura del polso**.
 > - Su una persona con il **braccialetto orientato al contrario** il modello sbaglia quasi tutti i riposi; con la sola fisiologia li riconosce tutti.
+> - **Ternario** (riposo / stress cognitivo e sociale / stress fisico): Random Forest **0,94** contro lo **0,77** del paper. Con la **sola fisiologia** scende a 0,74: riconosce il riposo, ma **confonde lo stress mentale con lo sforzo fisico**.
 
 ---
 
@@ -26,10 +27,10 @@ Partendo dal dataset VitaStress e dal lavoro dei suoi autori, il progetto:
 | — | esplorazione del dataset e Figura 4 del paper | ✅ |
 | 1 | tabella dei dati come gli autori | ✅ |
 | 2 | classificatore binario (sei modelli) | ✅ |
-| 3 | confronto fisiologia / movimento | in attesa della prof |
+| 3 | classificatore ternario, ablation, prima MLP | ✅ |
 | 4 | feature dai segnali grezzi | da fare |
-| 5 | classificatori con le nuove feature | da fare |
-| 6 | rete neurale (MLP) | da fare |
+| 5 | MLP con le nuove feature | da fare |
+| 6 | rete profonda sui segnali grezzi (opzionale) | da fare |
 | 7 | conclusioni e relazione | da fare |
 
 ---
@@ -174,13 +175,85 @@ per riposo. Su questa persona rispondere sempre «stress» darebbe 1,00, quindi 
 
 ---
 
-## Domande aperte per la prof
+## Passo 3 — Il classificatore ternario
 
-- rifare il confronto **solo fisiologia / solo movimento** (righe Physio e Motion della Tabella 4 del paper)?
-- provare un compito **senza la corsa** (riposo contro calcolo + discorso), per separare lo stress dal movimento?
-- quali **feature nuove** calcolare e in che ordine; finestre da **60 secondi**?
+Dopo la call del 6 novembre il binario è chiuso e il lavoro continua sul **ternario**, come nel paper:
+**riposo** (0), **stress cognitivo e sociale** (1: calcolo + discorso), **stress fisico** (2: corsa).
+Stessa tabella e stessa validazione del passo 2, con due correzioni:
+
+- `ddca342b`: la media di accY e accZ cambia segno (braccialetto ruotato di 180° attorno all'asse X);
+- `a5e823ad`: del riposo di 82 minuti si tengono gli ultimi 10, come gli altri partecipanti.
+
+Solo le 4 fasi principali (riposo iniziale, calcolo, discorso, corsa): **21 persone, 1.165 righe** (423 / 400 / 342).
+Rispondere sempre la classe più numerosa dà **0,36**.
+
+| modello | accuracy (noi) | accuracy (paper, Tab. 2) | F1 macro (noi) |
+|---|---|---|---|
+| Logistic Regression | 0,91 ± 0,08 | 0,77 | 0,91 ± 0,08 |
+| **Random Forest** | **0,94 ± 0,06** | **0,77** | **0,94 ± 0,06** |
+| Decision Tree | 0,85 ± 0,10 | 0,68 | 0,84 ± 0,11 |
+| LDA | 0,89 ± 0,07 | 0,76 | 0,89 ± 0,07 |
+| XGBoost | 0,93 ± 0,05 | 0,77 | 0,93 ± 0,05 |
+| kNN | 0,88 ± 0,10 | 0,76 | 0,88 ± 0,10 |
+| MLP (64, 32) | 0,88 ± 0,11 | — | 0,88 ± 0,11 |
+
+![Ternario: noi contro il paper](figures/ternario_noi_vs_paper.png)
+
+Qui siamo **12–17 punti sopra il paper**, molto più che nel binario. È una differenza da spiegare, non un miglioramento.
+La pista più probabile sono le fasi incluse: aggiungendo pause, recupero e preparazione del discorso, Random Forest scende a **0,80**.
+Le pause arrivano subito dopo un compito, con il battito ancora alto, e «sembrano» stress.
+
+<table>
+<tr>
+<td width="42%"><img src="figures/ternario_matrice_confusione.png" alt="Matrice di confusione del ternario"></td>
+<td>
+
+**Dove sbaglia Random Forest**
+
+- riposo riconosciuto nel 97% dei casi;
+- stress cognitivo nel 94% (17 righe scambiate per riposo);
+- stress fisico nel 92% (28 righe scambiate per cognitivo).
+
+</td>
+</tr>
+</table>
+
+![Accuracy per persona nel ternario](figures/ternario_accuracy_per_persona.png)
+
+Tutte le persone sono sopra 0,79. Con la correzione degli assi `ddca342b` (in arancione) arriva a 1,00.
+
+### Ablation: quanto conta ogni gruppo di feature
+
+Si toglie un **gruppo intero** e non una feature sola, perché feature collegate si sostituiscono a vicenda.
+
+| prova (Random Forest) | accuracy | riposo | cognitivo | fisico |
+|---|---|---|---|---|
+| tutte le feature | 0,94 | 0,97 | 0,94 | 0,92 |
+| senza battito | 0,90 | 0,93 | 0,88 | 0,88 |
+| senza sudore | 0,93 | 0,96 | 0,93 | 0,90 |
+| senza temperatura | 0,93 | 0,96 | 0,92 | 0,90 |
+| senza postura (medie acc) | 0,88 | 0,95 | 0,81 | 0,87 |
+| senza agitazione (std e var acc) | 0,89 | 0,96 | 0,85 | 0,86 |
+| **solo fisiologia** | **0,74** | 0,91 | **0,65** | **0,62** |
+| solo movimento | 0,90 | 0,93 | 0,87 | 0,88 |
+
+![Ablation](figures/ternario_ablation.png)
+
+- **La sola fisiologia riconosce il riposo, ma confonde lo stress mentale con lo sforzo fisico**: battito e sudore salgono in entrambi.
+- Per separarli serve il movimento. Per gli autori la corsa è «stress fisico», quindi usarlo è corretto.
+- La **postura** aiuta soprattutto a riconoscere lo stress cognitivo: nel discorso si sta in piedi.
+- Sudore e temperatura, come li calcola il braccialetto, contano poco.
+
+**Domanda per i prossimi passi:** con feature fisiologiche più specifiche (variabilità del battito, reazioni di sudore dai segnali grezzi),
+il braccialetto riesce a distinguere lo stress psicologico **senza il movimento**? Ogni esperimento si fa con e senza accelerometro.
+
+---
+
+## Domande aperte
+
 - **normalizzazione per persona**: dichiararla come limite o provare una variante con il solo riposo (calibrazione)?
-- `ddca342b` e `a5e823ad`: tenerle o escluderle?
+- finestre da **60 secondi** per le feature nuove: rifare anche la tabella degli autori con la stessa finestra?
+- la **rete profonda** sui segnali grezzi: ultimo capitolo, se c'è tempo.
 
 ## Prossimi passi
 
@@ -193,7 +266,8 @@ per riposo. Su questa persona rispondere sempre «stress» darebbe 1,00, quindi 
 | `acc` (32 Hz) | magnitudine del movimento | non dipende dall'orientamento del polso |
 | temperatura (1 Hz) | media, deviazione standard, pendenza | andamento più fine di `temp_sk1` |
 
-Poi **passo 5** (stessi classificatori con le nuove feature), **passo 6** (MLP) e **passo 7** (conclusioni). Fine del lavoro sperimentale: 19 dicembre 2026.
+Ordine: prima la magnitudine del movimento e la temperatura, poi il sudore, poi il PPG. Ogni gruppo nuovo entra nell'ablation, con e senza movimento.
+Poi **passo 5** (MLP con le nuove feature), **passo 6** (rete profonda, opzionale) e **passo 7** (conclusioni). Fine del lavoro sperimentale: 19 dicembre 2026.
 
 ---
 
@@ -204,6 +278,8 @@ notebooks/
   01_figura4.ipynb                   esplorazione e riproduzione della Figura 4
   02_tabella_classificatore.ipynb    tabella degli autori, classificatori, grafici,
                                      analisi delle due persone difficili
+  03_ternario.ipynb                  classificatore ternario, matrice di confusione,
+                                     ablation per gruppi di feature, MLP
 docs/
   piano.md                           piano di lavoro
   feature_autori.md                  feature usate dagli autori

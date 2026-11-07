@@ -13,6 +13,8 @@
 - Passi 1–2 (notebook 02, guida PDF dei passi 1-2)
 - Analisi delle due persone su cui il modello sbaglia (notebook 02, Parte 4)
 - Aggiornamento e domande per la prof → `docs/guide/03_preparazione_call.pdf`
+- Call del 6 novembre: binario chiuso, si passa al ternario
+- Primo giro del ternario, ablation e MLP (notebook 03)
 
 ---
 
@@ -37,55 +39,43 @@
 
 **Fatto quando:** una tabella con i risultati di tutti e sei.
 
-## Passo 3 — Confronto con il paper: fisiologia e movimento
-*In sospeso: da chiedere alla prof alla call prima di farlo.*
+## Passo 3 — Classificatore ternario (decisione della prof, 6 novembre)
+**Obiettivo:** riprodurre il ternario degli autori (Tabella 2 del paper arXiv: RF 0,77).
+- classi: riposo = 0, calcolo + discorso = 1, corsa = 2
+- stessa tabella del passo 1, stessa validazione
+- matrice di confusione 3×3 e accuracy per persona (controllare `ddca342b`)
+- **ablation per gruppi**: livello A (tutte / solo fisiologia / solo movimento), livello B (togli un gruppo alla volta)
+- notebook `03_ternario.ipynb`
 
-**Obiettivo:** completare la replica con le altre righe della Tabella 4 del paper.
+**Fatto (7 novembre):** 21 persone, 1.165 righe; RF 0,94 ± 0,06, XGB 0,93, MLP 0,88; solo fisiologia 0,74 (cognitivo 0,65, fisico 0,62). Correzioni: `a5e823ad` ultimi 10 minuti del riposo, `ddca342b` assi Y e Z invertiti. La differenza col paper si spiega probabilmente con le fasi incluse (con pause e preparazione RF 0,80): restiamo sulle 4 fasi principali.
 
-| esperimento | dati | compito |
-|---|---|---|
-| A | tutti i segnali | riposo vs calcolo + discorso + corsa |
-| B | solo fisiologia | riposo vs calcolo + discorso + corsa |
-| C | solo movimento | riposo vs calcolo + discorso + corsa |
+## Passo 4 — Feature dai dati grezzi (Matteo)
+**Obiettivo:** il contributo nuovo del tirocinio, valutato sul ternario.
 
-- A, B, C si confrontano con la Tabella 4 del paper
+Un segnale alla volta, dal più facile:
+1. **movimento**: magnitudine √(x²+y²+z²), indipendente dall'orientamento
+2. **temperatura**: media, dev. standard, pendenza
+3. **sudore** da `bioz`: numero di reazioni, ampiezza, livello di fondo
+4. **battito** dal PPG: variabilità del battito (SDNN, RMSSD, pNN50); misurare anche quanta parte del segnale è utilizzabile
 
-**Fatto quando:** tabella "noi contro loro".
+Finestre da 60 s che avanzano di 30 s (proposta, da confermare).
 
-## Passo 4 — Feature dai dati grezzi
-**Obiettivo:** il contributo nuovo del tirocinio. Finestre da 60 secondi.
+**Fatto quando:** nuova tabella con queste feature, aggiunta all'ablation come nuovo gruppo.
 
-Un segnale alla volta:
-1. **sudore** da `bioz`: numero di reazioni, ampiezza, livello di fondo
-2. **battito** dal PPG: variabilità del battito (SDNN, RMSSD, pNN50)
-3. **movimento**: magnitudine
-4. **temperatura**: media, dev. standard, pendenza
+## Passo 5 — MLP sul ternario
+- prima sulle 12 feature degli autori (primo giro: 0,86), poi con le feature nuove
+- stessa validazione, confronto con i sei classificatori
 
-Per il PPG: misurare quanta parte del segnale è recuperabile, anche quella è un risultato.
-
-**Fatto quando:** nuova tabella con queste feature.
-
-## Passo 5 — Classificatori sulle nuove feature
-**Obiettivo:** capire se le nostre feature aiutano.
-- stesso codice del passo 2
-- aggiungere un gruppo di feature alla volta
-- ripetere gli esperimenti del passo 3
-
-**Fatto quando:** si sa quali feature servono.
-
-## Passo 6 — Rete neurale (MLP)
-**Obiettivo:** confrontare una rete neurale con i classificatori classici.
-- rete piccola, stessa validazione
-- sulle tabelle dei passi 1 e 4
-
-**Fatto quando:** risultato MLP accanto agli altri.
+## Passo 6 — Rete neurale profonda (opzionale)
+- sui segnali grezzi, come ultimo capitolo, solo se c'è tempo
 
 ## Passo 7 — Conclusioni
-- tabella finale con tutti i risultati
-- discussione: quale modello, quali feature, stress o movimento?
-- revisione della relazione
+- tabella finale; discussione: quale modello, quali feature, stress o movimento?
+- binario come replica riuscita, ternario come lavoro principale
+- fine lavoro sperimentale 19 dicembre; relazione dopo
 
----
+## Prossima call con la prof
+Nessuna data fissa: la chiediamo quando ternario, feature nuove e MLP sono pronti (obiettivo fine novembre).
 
 ## Da confermare con la prof
 - Il passo 3 (tutti / solo fisiologia / solo movimento) va fatto? Sono le altre righe della Tabella 4 del paper, quindi rientrerebbe nella replica

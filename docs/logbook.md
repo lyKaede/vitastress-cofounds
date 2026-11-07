@@ -83,3 +83,53 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 
 **Prossimo passo**
 - Dopo la call: passo 3 se confermato, altrimenti direttamente passo 4
+
+---
+
+## Settimana 5 — Call con la prof e inizio del ternario
+
+**Fatto**
+- Call con la prof (6 novembre), preparata con il recap PDF
+- Notebook 03: ternario come gli autori, matrice di confusione, ablation per gruppi, MLP (primo giro)
+- README della repo arricchito con i grafici del passo 1, del passo 2 e delle due persone difficili
+
+**Decisioni della prof**
+- binario chiuso, si continua sul ternario
+- to do: ternario, feature nuove dai grezzi, MLP sul ternario
+- rete profonda sui grezzi solo se c'è tempo
+- `a5e823ad` in sospeso
+
+**Risultati (primo giro, RF, 20 persone)**
+- ternario: 0,91 contro 0,77 del paper
+- solo fisiologia 0,76 · solo movimento 0,87
+- la fisiologia riconosce il riposo (0,91) ma confonde stress cognitivo e fisico (0,68 e 0,66)
+- MLP 0,86
+
+**Da capire**
+- perché sul ternario siamo 8–14 punti sopra il paper (sul binario erano 0–7)
+
+**Prossimo passo**
+- Indagare la differenza con il paper, poi le feature nuove
+
+---
+
+## 7 novembre — Ternario sistemato, lavoro del collega
+
+**Fatto**
+- Cercata la causa della differenza col paper sul ternario: normalizzazione e modo di contare non c'entrano; includendo pause, recupero e preparazione del discorso RF scende a 0,80 (paper 0,77). Decisione: restare sulle 4 fasi principali
+- Letto il lavoro del collega (stessa pipeline, risultati ancora più alti dei nostri)
+- Adottate due sue correzioni: `a5e823ad` con gli ultimi 10 minuti del riposo, `ddca342b` con gli assi Y e Z invertiti (la mia ipotesi X e Z era sbagliata)
+- Notebook 03 aggiornato ed eseguito; README con la sezione del ternario
+- Animazione della MLP (pagina interattiva)
+
+**Risultati (ternario, 21 persone)**
+- RF 0,94 ± 0,06 · XGB 0,93 · MLP 0,88
+- solo fisiologia 0,74: riposo 0,91, cognitivo 0,65, fisico 0,62
+- `ddca342b` da 0,49 a 1,00 con la correzione degli assi
+
+**Capito**
+- per gli autori la corsa è stress fisico: usare il movimento per riconoscerla è corretto; la domanda della tesi è la parte psicologica
+- domanda di ricerca: con feature fisiologiche migliori, il braccialetto distingue lo stress psicologico dallo sforzo fisico senza il movimento?
+
+**Prossimo passo**
+- Studiare il notebook 03 (Parti 1–5), poi le feature nuove dai segnali grezzi

@@ -48,6 +48,32 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **19. `a5e823ad`: errori dovuti alla normalizzazione.** Senza riposo, la media della persona è calcolata solo sulle fasi di stress: metà delle righe di stress finisce sotto la media e viene scambiata per riposo (7 errori su 11 nel calcolo, 5 su 14 nella corsa). Con solo la fisiologia resta bassa (0,69). Rispondere sempre «stress» su questa persona darebbe 1,00: il suo risultato non è confrontabile.
 
+## Ternario (call del 6 novembre)
+
+**20. Binario chiuso, si continua sul ternario.** Decisione della prof. Il binario resta come replica riuscita.
+
+**21. Classi del ternario come il paper:** riposo / calcolo + discorso (stress cognitivo e sociale) / corsa (stress fisico).
+
+**22. `a5e823ad` in sospeso, esclusa per ora.** Nel ternario non avrebbe righe della classe riposo. Interruttore `ESCLUDI` nella Fase 0 del notebook 03. Con lei inclusa RF scende da 0,91 a 0,88.
+
+**23. Ablation per gruppi di feature, non per singola feature.** Feature collegate (std e varianza dello stesso asse) si sostituiscono a vicenda: togliendone una sola il risultato non cambia e si concluderebbe a torto che non serve. Cinque gruppi: battito, sudore, temperatura, postura (medie acc), agitazione (std e varianza acc).
+
+**24. Riferimento minimo del ternario:** rispondere sempre la classe più numerosa (0,36).
+
+**25. MLP con scikit-learn** (`MLPClassifier`, strati 64 e 32, early stopping, random_state 42). Rete profonda sui segnali grezzi solo come ultimo capitolo opzionale.
+
+## Aggiornamenti del 7 novembre (dal lavoro del collega)
+
+**26. `ddca342b`: invertire gli assi Y e Z** (media di accY e accZ × −1 prima della normalizzazione). Corregge il braccialetto ruotato di 180° attorno a X. Sul ternario ddca342b passa da 0,49 a 0,98. Sostituisce l'ipotesi precedente «X e Z». Applicata nel notebook 03 (`ASSI_GIRATI`).
+
+**27. `a5e823ad`: tenere gli ultimi 10 minuti del riposo** (il riposo annotato dura 82 minuti, gli altri circa 10). Sostituisce l'esclusione (decisione 22). Applicata nel notebook 03 (Fase 1).
+
+**28. Permutation importance** accanto alla MDI: più affidabile per dire quanto conta davvero un gruppo di feature.
+
+**29. Domanda di ricerca:** distinguere lo stress psicologico dal riposo e dallo stress fisico senza il movimento; ogni esperimento con e senza accelerometro.
+
+**30. Solo le 4 fasi principali** (riposo iniziale, calcolo, discorso, corsa): sono i momenti in cui sappiamo con certezza cosa sta facendo la persona. Pause, preparazione del discorso e recupero restano fuori. La prova con tutte le fasi (RF 0,80, vicino allo 0,77 del paper) va nella relazione come probabile spiegazione della differenza.
+
 ## Da decidere
 
 - Fase di preparazione del discorso: conta come stress? (per ora esclusa)
