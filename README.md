@@ -8,7 +8,7 @@ Tirocinio · Interfacce uomo-macchina · Università degli Studi dell'Insubria �
 > - Il classificatore binario degli autori è **replicato**: Random Forest **0,93** contro l'**0,89** del paper.
 > - Il modello si appoggia molto al **movimento** (61% dell'importanza), e quasi metà di quel peso viene dalla **postura del polso**.
 > - Su una persona con il **braccialetto orientato al contrario** il modello sbaglia quasi tutti i riposi; con la sola fisiologia li riconosce tutti.
-> - **Ternario** (riposo / stress cognitivo e sociale / stress fisico): Random Forest **0,94** contro lo **0,77** del paper. Con la **sola fisiologia** scende a 0,74: riconosce il riposo, ma **confonde lo stress mentale con lo sforzo fisico**.
+> - **Ternario** (riposo / stress cognitivo e sociale / stress fisico): Random Forest **0,93** contro lo **0,77** del paper. Con la **sola fisiologia** scende a 0,74: riconosce il riposo, ma **confonde lo stress mentale con lo sforzo fisico**.
 
 ---
 
@@ -182,20 +182,23 @@ Dopo la call del 6 novembre il binario è chiuso e il lavoro continua sul **tern
 Stessa tabella e stessa validazione del passo 2, con due correzioni:
 
 - `ddca342b`: la media di accY e accZ cambia segno (braccialetto ruotato di 180° attorno all'asse X);
-- `a5e823ad`: del riposo di 82 minuti si tengono gli ultimi 10, come gli altri partecipanti.
+- `a5e823ad`: del riposo di 82 minuti si tengono gli ultimi 10, come gli altri partecipanti;
+- pulsanti premuti più volte (una fase ricominciata, come il calcolo di `3f27501c`): si tiene l'ultimo inizio che ha una fine dopo di sé, con la prima fine successiva.
 
-Solo le 4 fasi principali (riposo iniziale, calcolo, discorso, corsa): **21 persone, 1.165 righe** (423 / 400 / 342).
+Solo le 4 fasi principali (riposo iniziale, calcolo, discorso, corsa): **21 persone, 1.170 righe** (423 / 405 / 342).
 Rispondere sempre la classe più numerosa dà **0,36**.
 
 | modello | accuracy (noi) | accuracy (paper, Tab. 2) | F1 macro (noi) |
 |---|---|---|---|
-| Logistic Regression | 0,91 ± 0,08 | 0,77 | 0,91 ± 0,08 |
-| **Random Forest** | **0,94 ± 0,06** | **0,77** | **0,94 ± 0,06** |
+| Logistic Regression | 0,91 ± 0,09 | 0,77 | 0,90 ± 0,09 |
+| **Random Forest** | **0,93 ± 0,07** | **0,77** | **0,93 ± 0,08** |
 | Decision Tree | 0,85 ± 0,10 | 0,68 | 0,84 ± 0,11 |
-| LDA | 0,89 ± 0,07 | 0,76 | 0,89 ± 0,07 |
-| XGBoost | 0,93 ± 0,05 | 0,77 | 0,93 ± 0,05 |
-| kNN | 0,88 ± 0,10 | 0,76 | 0,88 ± 0,10 |
-| MLP (64, 32) | 0,88 ± 0,11 | — | 0,88 ± 0,11 |
+| LDA | 0,90 ± 0,07 | 0,76 | 0,89 ± 0,07 |
+| XGBoost | 0,93 ± 0,06 | 0,77 | 0,93 ± 0,07 |
+| kNN | 0,89 ± 0,11 | 0,76 | 0,89 ± 0,11 |
+| MLP (64, 32) | 0,86 ± 0,13 | — | 0,86 ± 0,13 |
+
+Ripetendo Random Forest con 5 semi casuali diversi l'accuracy va da 0,93 a 0,94: differenze di un punto non vanno lette come miglioramenti.
 
 ![Ternario: noi contro il paper](figures/ternario_noi_vs_paper.png)
 
@@ -210,9 +213,9 @@ Le pause arrivano subito dopo un compito, con il battito ancora alto, e «sembra
 
 **Dove sbaglia Random Forest**
 
-- riposo riconosciuto nel 97% dei casi;
-- stress cognitivo nel 94% (17 righe scambiate per riposo);
-- stress fisico nel 92% (28 righe scambiate per cognitivo).
+- riposo riconosciuto nel 96% dei casi (15 righe scambiate per cognitivo);
+- stress cognitivo nel 93% (18 righe scambiate per riposo, 10 per fisico);
+- stress fisico nel 90% (32 righe scambiate per cognitivo).
 
 </td>
 </tr>
@@ -220,7 +223,7 @@ Le pause arrivano subito dopo un compito, con il battito ancora alto, e «sembra
 
 ![Accuracy per persona nel ternario](figures/ternario_accuracy_per_persona.png)
 
-Tutte le persone sono sopra 0,79. Con la correzione degli assi `ddca342b` (in arancione) arriva a 1,00.
+Tutte le persone sono sopra 0,77. Con la correzione degli assi `ddca342b` (in arancione) arriva a 1,00.
 
 ### Ablation: quanto conta ogni gruppo di feature
 
@@ -228,14 +231,14 @@ Si toglie un **gruppo intero** e non una feature sola, perché feature collegate
 
 | prova (Random Forest) | accuracy | riposo | cognitivo | fisico |
 |---|---|---|---|---|
-| tutte le feature | 0,94 | 0,97 | 0,94 | 0,92 |
-| senza battito | 0,90 | 0,93 | 0,88 | 0,88 |
-| senza sudore | 0,93 | 0,96 | 0,93 | 0,90 |
-| senza temperatura | 0,93 | 0,96 | 0,92 | 0,90 |
-| senza postura (medie acc) | 0,88 | 0,95 | 0,81 | 0,87 |
-| senza agitazione (std e var acc) | 0,89 | 0,96 | 0,85 | 0,86 |
-| **solo fisiologia** | **0,74** | 0,91 | **0,65** | **0,62** |
-| solo movimento | 0,90 | 0,93 | 0,87 | 0,88 |
+| tutte le feature | 0,93 | 0,96 | 0,93 | 0,90 |
+| senza battito | 0,91 | 0,92 | 0,90 | 0,89 |
+| senza sudore | 0,93 | 0,96 | 0,92 | 0,90 |
+| senza temperatura | 0,93 | 0,96 | 0,93 | 0,90 |
+| senza postura (medie acc) | 0,88 | 0,94 | 0,82 | 0,86 |
+| senza agitazione (std e var acc) | 0,89 | 0,96 | 0,85 | 0,84 |
+| **solo fisiologia** | **0,74** | 0,89 | **0,67** | **0,64** |
+| solo movimento | 0,90 | 0,94 | 0,87 | 0,87 |
 
 ![Ablation](figures/ternario_ablation.png)
 

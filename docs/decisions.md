@@ -74,6 +74,10 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **30. Solo le 4 fasi principali** (riposo iniziale, calcolo, discorso, corsa): sono i momenti in cui sappiamo con certezza cosa sta facendo la persona. Pause, preparazione del discorso e recupero restano fuori. La prova con tutte le fasi (RF 0,80, vicino allo 0,77 del paper) va nella relazione come probabile spiegazione della differenza.
 
+## Aggiornamenti del 16 novembre
+
+**31. Pulsanti premuti più volte: l'ultimo inizio che ha una fine dopo di sé, con la prima fine successiva.** Prima si prendevano il primo inizio e la prima fine. Per `3f27501c` il calcolo preso era un tentativo interrotto di 2 minuti invece del calcolo vero di 5 minuti (con gli errori annotati). La regola «ultima fine» del collega da noi non va: togliendo le parentesi dai nomi, `7bb4dafd` avrebbe un riposo lungo un'ora. Se la fine non ha orario (`7bb4dafd`, calcolo) la fase viene saltata con un avviso. Effetto: 1.165 → 1.170 righe; RF 0,93 (con la tabella vecchia, 5 semi diversi davano 0,93–0,94: lo 0,94 era un seme fortunato).
+
 ## Da decidere
 
 - Fase di preparazione del discorso: conta come stress? (per ora esclusa)

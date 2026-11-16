@@ -47,7 +47,7 @@
 - **ablation per gruppi**: livello A (tutte / solo fisiologia / solo movimento), livello B (togli un gruppo alla volta)
 - notebook `03_ternario.ipynb`
 
-**Fatto (7 novembre):** 21 persone, 1.165 righe; RF 0,94 ± 0,06, XGB 0,93, MLP 0,88; solo fisiologia 0,74 (cognitivo 0,65, fisico 0,62). Correzioni: `a5e823ad` ultimi 10 minuti del riposo, `ddca342b` assi Y e Z invertiti. La differenza col paper si spiega probabilmente con le fasi incluse (con pause e preparazione RF 0,80): restiamo sulle 4 fasi principali.
+**Fatto (7 novembre, corretto il 16):** 21 persone, 1.170 righe; RF 0,93 ± 0,07, XGB 0,93, MLP 0,86; solo fisiologia 0,74 (cognitivo 0,67, fisico 0,64). Correzioni: `a5e823ad` ultimi 10 minuti del riposo, `ddca342b` assi Y e Z invertiti, pulsanti premuti più volte (`3f27501c`). La differenza col paper si spiega probabilmente con le fasi incluse (con pause e preparazione RF 0,80): restiamo sulle 4 fasi principali.
 
 ## Passo 4 — Feature dai dati grezzi (Matteo)
 **Obiettivo:** il contributo nuovo del tirocinio, valutato sul ternario.
@@ -63,7 +63,7 @@ Finestre da 60 s che avanzano di 30 s (proposta, da confermare).
 **Fatto quando:** nuova tabella con queste feature, aggiunta all'ablation come nuovo gruppo.
 
 ## Passo 5 — MLP sul ternario
-- prima sulle 12 feature degli autori (primo giro: 0,86), poi con le feature nuove
+- prima sulle 12 feature degli autori (0,86), poi con le feature nuove
 - stessa validazione, confronto con i sei classificatori
 
 ## Passo 6 — Rete neurale profonda (opzionale)

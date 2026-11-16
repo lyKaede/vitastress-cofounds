@@ -133,3 +133,24 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 
 **Prossimo passo**
 - Studiare il notebook 03 (Parti 1–5), poi le feature nuove dai segnali grezzi
+
+---
+
+## 16 novembre — Correzione degli orari
+
+**Fatto**
+- Confrontato il notebook 03 con quello del collega: trovati 5 casi di pulsanti premuti più volte nelle annotazioni
+- Corretta `trova_orari` (Fase 1): ultimo inizio che ha una fine dopo di sé, con la prima fine successiva; avviso quando manca l'orario della fine
+- Notebook 03 rieseguito, README e grafici aggiornati
+
+**Risultati (ternario, 21 persone, 1.170 righe)**
+- RF 0,93 ± 0,07 · XGB 0,93 · LR 0,91 · LDA 0,90 · kNN 0,89 · DT 0,85 · MLP 0,86
+- solo fisiologia 0,74: riposo 0,89, cognitivo 0,67, fisico 0,64
+- `3f27501c` 1,00
+
+**Capito**
+- RF con 5 semi casuali diversi varia fra 0,93 e 0,94: una differenza di un punto non è un risultato
+
+**Prossimo passo**
+- Studiare il notebook 03 (Parti 1–5), poi Parte 6 (differenza con il paper) e permutation importance
+
