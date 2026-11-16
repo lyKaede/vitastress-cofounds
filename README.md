@@ -203,8 +203,7 @@ Ripetendo Random Forest con 5 semi casuali diversi l'accuracy va da 0,93 a 0,94:
 ![Ternario: noi contro il paper](figures/ternario_noi_vs_paper.png)
 
 Qui siamo **12–17 punti sopra il paper**, molto più che nel binario. È una differenza da spiegare, non un miglioramento.
-La pista più probabile sono le fasi incluse: aggiungendo pause, recupero e preparazione del discorso, Random Forest scende a **0,80**.
-Le pause arrivano subito dopo un compito, con il battito ancora alto, e «sembrano» stress.
+La pista più probabile sono le fasi incluse nella tabella: la vediamo più sotto, in «Perché siamo sopra il paper».
 
 <table>
 <tr>
@@ -247,6 +246,45 @@ Si toglie un **gruppo intero** e non una feature sola, perché feature collegate
 - La **postura** aiuta soprattutto a riconoscere lo stress cognitivo: nel discorso si sta in piedi.
 - Sudore e temperatura, come li calcola il braccialetto, contano poco.
 
+### Quanto conta davvero ogni gruppo: permutation importance
+
+Per ogni persona esclusa si **mescolano a caso le colonne di un gruppo** e si guarda di quanto scende l'accuracy.
+A differenza dell'importanza interna di Random Forest (MDI), si misura sulla persona mai vista.
+
+| gruppo | MDI (somma del gruppo) | permutation importance (calo di accuracy) |
+|---|---|---|
+| postura (medie acc) | 0,33 | **0,26** |
+| battito | 0,23 | **0,22** |
+| agitazione (std e var acc) | 0,39 | **0,20** |
+| temperatura | 0,03 | 0,01 |
+| sudore | 0,03 | 0,00 |
+
+![Permutation importance](figures/ternario_permutation_importance.png)
+
+- Contano tre gruppi: **postura, battito e agitazione**. Mescolando sudore o temperatura l'accuracy non cambia.
+- La MDI metteva l'agitazione al primo posto: ha 6 colonne collegate fra loro, e la MDI tende a premiarle. Misurata sulla persona esclusa, scende al terzo.
+- Il battito è l'unica feature fisiologica che conta davvero.
+
+### Perché siamo sopra il paper: i momenti che entrano nella tabella
+
+Il paper non dice quali momenti dell'esperimento usa. Noi usiamo solo le 4 fasi principali. Aggiungendo le altre
+(pause fra i compiti e recupero finale come riposo, preparazione del discorso come stress), con tutto il resto uguale:
+
+| prova (Random Forest) | righe | accuracy | riposo | cognitivo | fisico |
+|---|---|---|---|---|---|
+| solo le 4 fasi (come sopra) | 1.170 | **0,93** | 0,96 | 0,93 | 0,90 |
+| + preparazione del discorso | 1.370 | 0,91 | 0,90 | 0,92 | 0,91 |
+| + pause e recupero | 1.906 | 0,85 | 0,90 | **0,66** | 0,90 |
+| + pause, recupero e preparazione | 2.106 | **0,81** | 0,86 | 0,67 | 0,92 |
+| *paper (Tabella 2)* | — | *0,77* | | | |
+
+![Prove sulle fasi incluse](figures/ternario_fasi_paper.png)
+
+- Con tutte le fasi si scende a **0,81**, vicino allo 0,77 del paper: è la spiegazione più probabile della differenza.
+- A crollare è lo **stress cognitivo** (da 0,93 a 0,66). Le pause arrivano subito dopo un compito: si è seduti e il battito è
+  ancora alto, proprio come durante il calcolo. Il modello impara che «seduti con il battito alto» può essere riposo, e sbaglia il calcolo.
+- È una pista forte, non una prova: il paper non lo scrive. Restiamo sulle 4 fasi principali, i momenti in cui sappiamo con certezza cosa sta facendo la persona.
+
 **Domanda per i prossimi passi:** con feature fisiologiche più specifiche (variabilità del battito, reazioni di sudore dai segnali grezzi),
 il braccialetto riesce a distinguere lo stress psicologico **senza il movimento**? Ogni esperimento si fa con e senza accelerometro.
 
@@ -282,7 +320,8 @@ notebooks/
   02_tabella_classificatore.ipynb    tabella degli autori, classificatori, grafici,
                                      analisi delle due persone difficili
   03_ternario.ipynb                  classificatore ternario, matrice di confusione,
-                                     ablation per gruppi di feature, MLP
+                                     ablation e permutation importance, MLP,
+                                     differenza con il paper
 docs/
   piano.md                           piano di lavoro
   feature_autori.md                  feature usate dagli autori

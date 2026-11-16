@@ -151,6 +151,11 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 **Capito**
 - RF con 5 semi casuali diversi varia fra 0,93 e 0,94: una differenza di un punto non è un risultato
 
+**Pomeriggio: permutation importance e Parte 6**
+- Notebook 03, Fasi 20–21: permutation importance per gruppo sulla persona esclusa. Contano postura (0,26), battito (0,22) e agitazione (0,20); sudore e temperatura quasi zero. La MDI sopravvalutava l'agitazione (0,39)
+- Notebook 03, Parte 6 (Fasi 24–26): aggiungendo pause, recupero e preparazione del discorso RF scende da 0,93 a 0,81 (paper 0,77). Crolla lo stress cognitivo (0,66): le pause, seduti con il battito ancora alto, somigliano al calcolo
+- Guida PDF del notebook 03
+
 **Prossimo passo**
-- Studiare il notebook 03 (Parti 1–5), poi Parte 6 (differenza con il paper) e permutation importance
+- Feature nuove dai segnali grezzi: magnitudine del movimento, temperatura, sudore (`bioz`), PPG
 

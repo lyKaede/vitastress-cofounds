@@ -68,7 +68,7 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **27. `a5e823ad`: tenere gli ultimi 10 minuti del riposo** (il riposo annotato dura 82 minuti, gli altri circa 10). Sostituisce l'esclusione (decisione 22). Applicata nel notebook 03 (Fase 1).
 
-**28. Permutation importance** accanto alla MDI: più affidabile per dire quanto conta davvero un gruppo di feature.
+**28. Permutation importance** accanto alla MDI: più affidabile per dire quanto conta davvero un gruppo di feature. Fatta il 16 novembre (notebook 03, Fase 20): un gruppo intero mescolato sulla persona esclusa, 5 ripetizioni.
 
 **29. Domanda di ricerca:** distinguere lo stress psicologico dal riposo e dallo stress fisico senza il movimento; ogni esperimento con e senza accelerometro.
 
@@ -78,6 +78,9 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **31. Pulsanti premuti più volte: l'ultimo inizio che ha una fine dopo di sé, con la prima fine successiva.** Prima si prendevano il primo inizio e la prima fine. Per `3f27501c` il calcolo preso era un tentativo interrotto di 2 minuti invece del calcolo vero di 5 minuti (con gli errori annotati). La regola «ultima fine» del collega da noi non va: togliendo le parentesi dai nomi, `7bb4dafd` avrebbe un riposo lungo un'ora. Se la fine non ha orario (`7bb4dafd`, calcolo) la fase viene saltata con un avviso. Effetto: 1.165 → 1.170 righe; RF 0,93 (con la tabella vecchia, 5 semi diversi davano 0,93–0,94: lo 0,94 era un seme fortunato).
 
+**32. MLP: solo scikit-learn, una configurazione.** `MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=1000, early_stopping=True, random_state=42)`, senza prove di architetture e senza PyTorch. Serve a dire se il limite sta nel modello o nelle feature: con le 12 feature degli autori 0,86 contro 0,93 di Random Forest. Si riprova una volta con le feature nuove. PyTorch solo se si fa la rete profonda.
+
+**33. Parte 6 nel notebook 03:** le fasi intermedie si leggono solo per spiegare la differenza con il paper (pause e recupero = riposo, preparazione = stress; tutte le pause di una persona). Con tutto RF 0,81 (paper 0,77). Il lavoro resta sulle 4 fasi principali (decisione 30).
 ## Da decidere
 
 - Fase di preparazione del discorso: conta come stress? (per ora esclusa)
