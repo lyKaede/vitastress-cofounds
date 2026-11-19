@@ -159,3 +159,66 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 **Prossimo passo**
 - Feature nuove dai segnali grezzi: magnitudine del movimento, temperatura, sudore (`bioz`), PPG
 
+---
+
+## 17 novembre — Feature nuove: magnitudine e temperatura della pelle
+
+**Fatto**
+- Notebook 04 (`04_feature_nuove.ipynb`): stessa tabella del notebook 03 più 6 colonne nuove da due segnali grezzi
+- Magnitudine del movimento (media e std): misura del movimento che non dipende dall'orientamento del braccialetto
+- Temperatura della pelle e flusso di calore dal file `heat_flux_sensor_temperature`
+
+**Scoperto**
+- `temp_sk1`, la temperatura usata dagli autori, è la temperatura interna stimata (`cbt`), quasi costante: per questo non serviva
+- La pelle si scalda a riposo e nel calcolo, si raffredda nella corsa e nel discorso (pendenza media per fase: +0,21 · +0,10 · −0,19 · −0,02 °C al minuto)
+- La colonna `body_pose` dell'accelerometro vale sempre 1: inutile
+
+**Risultati (Random Forest, 1.170 righe)**
+- Senza movimento: fisiologia degli autori 0,74 → fisiologia nuova **0,80** (media su 5 semi; cognitivo 0,67 → 0,72, fisico 0,64 → 0,75)
+- Controllo senza riposo, cognitivo contro fisico: 0,70 → **0,76** (classe più numerosa 0,54)
+- Con la magnitudine: 0,88–0,89 (con fisiologia degli autori o nuova: con il movimento la temperatura non aggiunge niente)
+- Con tutto (autori + nuove): 0,94, come il notebook 03
+
+**Prossimo passo**
+- Sudore da `bioz`: reazioni, ampiezza, livello di fondo
+
+---
+
+## 18 novembre — Feature nuove: sudore dal segnale grezzo
+
+**Fatto**
+- Aggiornamento per la prof (`aggiornamento_tirocinio_18_novembre.pdf`), nello stile del documento del 6 novembre
+- Notebook 04, Parte 4: sudore dal segnale grezzo `bioz` (conduttanza della pelle, 25 Hz): livello, pendenza, reazioni, ampiezza
+
+**Scoperto**
+- Il segnale sale quando si suda: dopo la corsa resta alto per molti minuti
+- A riposo il segnale sta ancora salendo (l'elettrodo si assesta): il livello dipende dall'ordine delle fasi
+- Nel discorso ci sono buchi improvvisi dovuti ai movimenti del polso
+- Reazioni per blocco da 30 s: riposo 0,78 · calcolo 1,78 · corsa 1,51 · discorso 2,20
+- L'indice `stress_skin` da solo fa 0,36 (quasi il caso), il segnale grezzo 0,61
+
+**Risultati (Random Forest, 1.167 righe, media su 5 semi)**
+- Senza movimento: autori 0,75 → + temperatura 0,80 → + sudore grezzo **0,83** (cognitivo 0,69 → 0,76)
+- Cognitivo contro fisico, senza riposo: 0,72 → 0,76 → **0,78**
+- Con la magnitudine: 0,90; con tutto: 0,95
+
+**Prossimo passo**
+- Variabilità del battito dal PPG
+
+---
+
+## 19 novembre — Battito dal PPG: misurato, non usato
+
+**Fatto**
+- Notebook 04, Parte 5: quanto si vede il battito nel PPG del polso, fase per fase, e quanto coprono gli intervalli del braccialetto
+- Provati tutti i canali (verde, rosso, infrarosso, `ppg3`) e un primo rilevatore di battiti con `scipy`: affidabile solo a riposo
+
+**Scoperto**
+- Finestre da 10 s con il battito visibile: riposo 71% · calcolo 15% · discorso 4% · corsa 3%
+- Intervalli del braccialetto (`rr_interval`): 85% del riposo · 32% del calcolo · 11% del discorso · 0% della corsa
+- Appena si parla, si scrive, si gesticola o si corre, i movimenti del polso coprono il battito
+
+**Deciso**
+- La variabilità del battito resta documentata ma fuori dal modello (decisione 40): sarebbe una misura del movimento, non dello stress
+- MLP con le feature nuove: in attesa (decisione 41)
+

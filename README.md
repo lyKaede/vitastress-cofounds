@@ -2,7 +2,7 @@
 
 Tirocinio · Interfacce uomo-macchina · Università degli Studi dell'Insubria · 2026
 
-**Stato:** in corso. Binario replicato (passi 1 e 2); classificatore ternario, ablation e prima MLP fatti (passo 3). Prossimo: feature dai segnali grezzi.
+**Stato:** in corso. Binario replicato (passi 1 e 2); classificatore ternario, ablation e prima MLP fatti (passo 3). Feature dai segnali grezzi in corso (passo 4).
 
 > **In breve**
 > - Il classificatore binario degli autori è **replicato**: Random Forest **0,93** contro l'**0,89** del paper.
@@ -28,7 +28,7 @@ Partendo dal dataset VitaStress e dal lavoro dei suoi autori, il progetto:
 | 1 | tabella dei dati come gli autori | ✅ |
 | 2 | classificatore binario (sei modelli) | ✅ |
 | 3 | classificatore ternario, ablation, prima MLP | ✅ |
-| 4 | feature dai segnali grezzi | da fare |
+| 4 | feature dai segnali grezzi | ✅ (3 gruppi nel modello, PPG documentato) |
 | 5 | MLP con le nuove feature | da fare |
 | 6 | rete profonda sui segnali grezzi (opzionale) | da fare |
 | 7 | conclusioni e relazione | da fare |
@@ -290,6 +290,55 @@ il braccialetto riesce a distinguere lo stress psicologico **senza il movimento*
 
 ---
 
+## Passo 4 — Feature nuove dai segnali grezzi
+
+Stessa tabella del passo 3, con feature calcolate dai segnali grezzi del braccialetto. Ogni prova si fa **con e senza movimento**:
+la domanda è se, **senza il movimento**, la fisiologia riesce a distinguere lo stress mentale dallo sforzo fisico.
+
+**Tre gruppi nel modello (10 colonne), uno documentato:**
+
+- **Magnitudine del movimento** √(x² + y² + z²), media e deviazione standard: misura quanto ci si muove senza dipendere da come è girato il braccialetto
+  (a riposo `ddca342b` ha la stessa magnitudine degli altri, senza correzioni) e senza la postura. Nelle nostre prove sostituisce le 9 colonne di movimento degli autori.
+- **Temperatura della pelle** (media, oscillazione, pendenza) e **flusso di calore**. La «temperatura» degli autori, `temp_sk1`, è in realtà la
+  temperatura interna stimata dal braccialetto (coincide con `cbt`), quasi costante a 37,2 °C: per questo non serviva.
+- **Sudore dal segnale grezzo** `bioz` (conduttanza della pelle, 25 Hz): livello, pendenza, numero e ampiezza delle reazioni.
+  L'indice degli autori `stress_skin`, da solo, fa 0,36 (quasi il caso); il segnale grezzo 0,61.
+
+| prova (Random Forest, 1.167 righe) | accuracy | riposo | cognitivo | fisico |
+|---|---|---|---|---|
+| senza movimento, fisiologia degli autori | 0,75 | 0,90 | 0,69 | 0,64 |
+| senza movimento, + temperatura della pelle | 0,80 | 0,95 | 0,70 | 0,75 |
+| **senza movimento, + temperatura + sudore grezzo** | **0,84** | 0,98 | **0,76** | **0,76** |
+| fisiologia nuova + magnitudine | 0,90 | 0,98 | 0,86 | 0,86 |
+| fisiologia + movimento degli autori (passo 3) | 0,93 | 0,97 | 0,92 | 0,89 |
+
+![Recall per classe con le feature nuove](figures/feature_nuove_recall.png)
+
+- **Senza movimento si sale da 0,75 a 0,83** (media su 5 semi): lo stress mentale da 0,69 a 0,76, lo sforzo fisico da 0,64 a 0,76.
+- Il riposo è sempre la prima fase (braccialetto che si scalda, elettrodo del sudore che si assesta). Controllo: togliendo il riposo,
+  **stress cognitivo contro fisico** sale da 0,72 a 0,76 con la temperatura e a **0,78** con il sudore grezzo.
+- La pelle si scalda a riposo e nel calcolo, si raffredda nella corsa e nel discorso:
+
+![Pendenza della temperatura della pelle](figures/feature_nuove_pendenza_pelle.png)
+
+- Il sudore sale molto con la corsa e resta alto a lungo; a riposo il segnale sta ancora salendo:
+
+![Sudore dal segnale grezzo](figures/feature_nuove_sudore.png)
+
+### Il battito dal PPG: misurato, ma fuori dal modello
+
+La variabilità del battito (quanto cambia il tempo fra un battito e l'altro) è molto legata allo stress mentale, ma per calcolarla
+bisogna vedere ogni singolo battito nel PPG. Con il braccialetto da polso il battito si vede bene **quasi solo a riposo**:
+appena si parla, si scrive, si gesticola o si corre, i movimenti del polso lo coprono, su tutti i canali di luce.
+Anche gli intervalli fra i battiti che il braccialetto calcola da solo spariscono quando ci si muove.
+
+![Qualità del PPG per fase](figures/feature_nuove_ppg_qualita.png)
+
+Una colonna di variabilità del battito sarebbe piena a riposo e vuota o sbagliata sotto stress: il modello imparerebbe il movimento,
+non lo stress. Per questo resta **documentata ma fuori dal modello**: è un limite del braccialetto da polso.
+
+---
+
 ## Domande aperte
 
 - **normalizzazione per persona**: dichiararla come limite o provare una variante con il solo riposo (calibrazione)?
@@ -322,6 +371,9 @@ notebooks/
   03_ternario.ipynb                  classificatore ternario, matrice di confusione,
                                      ablation e permutation importance, MLP,
                                      differenza con il paper
+  04_feature_nuove.ipynb             feature dai segnali grezzi (magnitudine, temperatura
+                                     della pelle, sudore; qualità del PPG),
+                                     prove con e senza movimento
 docs/
   piano.md                           piano di lavoro
   feature_autori.md                  feature usate dagli autori

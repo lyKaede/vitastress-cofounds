@@ -81,6 +81,24 @@ Ogni scelta importante: cosa ho deciso e perché.
 **32. MLP: solo scikit-learn, una configurazione.** `MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=1000, early_stopping=True, random_state=42)`, senza prove di architetture e senza PyTorch. Serve a dire se il limite sta nel modello o nelle feature: con le 12 feature degli autori 0,86 contro 0,93 di Random Forest. Si riprova una volta con le feature nuove. PyTorch solo se si fa la rete profonda.
 
 **33. Parte 6 nel notebook 03:** le fasi intermedie si leggono solo per spiegare la differenza con il paper (pause e recupero = riposo, preparazione = stress; tutte le pause di una persona). Con tutto RF 0,81 (paper 0,77). Il lavoro resta sulle 4 fasi principali (decisione 30).
+## Feature nuove (17 novembre)
+
+**34. Magnitudine del movimento come misura principale del movimento nelle nostre prove.** √(accX² + accY² + accZ²), media e deviazione standard ogni 30 s. Non dipende da come è girato il braccialetto (a riposo `ddca342b` ha 505 come gli altri, 505–527, senza correzioni) e non contiene la postura: misura solo quanto ci si muove. Le 9 colonne degli autori restano solo per il confronto con il paper. Ogni prova «con movimento» si può fare nelle due versioni; quella principale è con la magnitudine.
+
+**35. `temp_sk1` sostituita dalla temperatura della pelle.** `temp_sk1` coincide con `cbt` (differenza media 0,001 °C), la temperatura corporea interna stimata dal braccialetto: è quasi costante (37,2 °C in tutte le fasi) e per questo non serviva. Dal file `heat_flux_sensor_temperature` (1 Hz): `skin_temp` (media, deviazione standard, pendenza in °C al minuto) e `heatflux` (media). Valori della pelle sotto 15 °C → mancanti (nessuno nelle nostre righe).
+
+**36. Feature nuove sugli stessi blocchi da 30 s del notebook 03** (stesse 1.170 righe), così i risultati si confrontano direttamente. La finestra da 60 s si decide quando serve (variabilità del battito dal PPG).
+
+**37. Controllo del riposo come prima fase.** Il riposo è sempre all'inizio, con il braccialetto appena messo che si scalda: una feature che dipende dal tempo può riconoscere «inizio dell'esperimento». Per ogni feature nuova legata al tempo si controlla anche il confronto stress cognitivo contro stress fisico, senza riposo.
+
+**38. Sudore: il segnale grezzo `bioz` invece del solo indice `stress_skin`.** `bioz` è la conduttanza della pelle a 25 Hz (sale quando si suda). In logaritmo, così una variazione dell'1% conta uguale per tutti; per ogni blocco da 30 s: livello (mediana mobile su 20 s), pendenza, numero di reazioni (picchi con prominenza ≥ 0,01, cioè circa 1%) e ampiezza totale. Soglia provata fra 0,5% e 5%: nessuna differenza (ternario 0,80–0,81, cognitivo contro fisico 0,77–0,78). Da solo l'indice `stress_skin` fa 0,36 (quasi il caso), il segnale grezzo 0,61. `stress_skin` resta nella fisiologia per non togliere niente rispetto agli autori.
+
+**39. Righe senza livello del sudore tolte** (3 blocchi di riposo all'inizio, segnale insufficiente): da 1.170 a 1.167. Il riferimento «fisiologia degli autori» passa da 0,74 a 0,75.
+
+**40. Variabilità del battito (PPG): documentata, non entra nel modello.** Il battito si vede bene nel PPG del polso quasi solo a riposo: finestre da 10 s con il battito visibile (più di metà dell'energia fra 0,5 e 4 Hz alla frequenza del cuore) riposo 71% · calcolo 15% · discorso 4% · corsa 3%, con risultati simili su tutti i canali (verde, rosso, infrarosso, `ppg3`). Anche gli intervalli del braccialetto (`rr_interval`) coprono il 85% del riposo, il 32% del calcolo, l'11% del discorso e lo 0% della corsa. Una colonna di variabilità del battito sarebbe piena a riposo e vuota o sbagliata sotto stress: il modello imparerebbe la qualità del segnale (cioè il movimento), non lo stress. È un limite del braccialetto da polso, da dichiarare nella tesi; spiega anche perché gli autori hanno scartato gli intervalli RR. Decisione mia, 19 novembre.
+
+**41. MLP con le feature nuove: in attesa.** Decisione mia, 19 novembre.
+
 ## Da decidere
 
 - Fase di preparazione del discorso: conta come stress? (per ora esclusa)

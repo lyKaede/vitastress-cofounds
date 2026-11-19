@@ -49,18 +49,20 @@
 
 **Fatto (7 novembre, corretto il 16):** 21 persone, 1.170 righe; RF 0,93 ± 0,07, XGB 0,93, MLP 0,86; solo fisiologia 0,74 (cognitivo 0,67, fisico 0,64). Correzioni: `a5e823ad` ultimi 10 minuti del riposo, `ddca342b` assi Y e Z invertiti, pulsanti premuti più volte (`3f27501c`). Permutation importance (Fasi 20–21): contano postura, battito e agitazione. Parte 6: con pause, recupero e preparazione RF scende a 0,81 (paper 0,77), quindi la differenza si spiega probabilmente con le fasi incluse: restiamo sulle 4 fasi principali.
 
-## Passo 4 — Feature dai dati grezzi (Matteo)
-**Obiettivo:** il contributo nuovo del tirocinio, valutato sul ternario.
+## Passo 4 — Feature dai dati grezzi (in corso, notebook 04)
+**Obiettivo:** il contributo nuovo del tirocinio, valutato sul ternario, sempre con e senza movimento.
 
 Un segnale alla volta, dal più facile:
-1. **movimento**: magnitudine √(x²+y²+z²), indipendente dall'orientamento
-2. **temperatura**: media, dev. standard, pendenza
-3. **sudore** da `bioz`: numero di reazioni, ampiezza, livello di fondo
-4. **battito** dal PPG: variabilità del battito (SDNN, RMSSD, pNN50); misurare anche quanta parte del segnale è utilizzabile
+1. ✅ **movimento**: magnitudine √(x²+y²+z²), indipendente dall'orientamento (media, std)
+2. ✅ **temperatura della pelle** (non `temp_sk1`, che è la temperatura interna stimata): media, std, pendenza; flusso di calore
+3. ✅ **sudore** da `bioz`: livello, pendenza, numero di reazioni, ampiezza
+4. ✅ **battito** dal PPG: misurato quanto è utilizzabile; **la variabilità del battito non entra nel modello** (battito visibile solo a riposo, decisione 40)
 
-Finestre da 60 s che avanzano di 30 s (proposta, da confermare).
+Stessi blocchi da 30 s del notebook 03.
 
-**Fatto quando:** nuova tabella con queste feature, aggiunta all'ablation come nuovo gruppo.
+**Risultati (18 novembre):** senza movimento 0,75 → 0,80 con la temperatura della pelle → 0,83 con il sudore grezzo; cognitivo contro fisico 0,72 → 0,76 → 0,78.
+
+**Fatto (19 novembre):** tre gruppi nel modello (magnitudine, temperatura, sudore), il quarto (PPG) documentato come limite.
 
 ## Passo 5 — MLP sul ternario
 - prima sulle 12 feature degli autori (0,86), poi con le feature nuove
