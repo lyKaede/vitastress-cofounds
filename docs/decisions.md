@@ -78,7 +78,7 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **31. Pulsanti premuti più volte: l'ultimo inizio che ha una fine dopo di sé, con la prima fine successiva.** Prima si prendevano il primo inizio e la prima fine. Per `3f27501c` il calcolo preso era un tentativo interrotto di 2 minuti invece del calcolo vero di 5 minuti (con gli errori annotati). La regola «ultima fine» del collega da noi non va: togliendo le parentesi dai nomi, `7bb4dafd` avrebbe un riposo lungo un'ora. Se la fine non ha orario (`7bb4dafd`, calcolo) la fase viene saltata con un avviso. Effetto: 1.165 → 1.170 righe; RF 0,93 (con la tabella vecchia, 5 semi diversi davano 0,93–0,94: lo 0,94 era un seme fortunato).
 
-**32. MLP: solo scikit-learn, una configurazione.** `MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=1000, early_stopping=True, random_state=42)`, senza prove di architetture e senza PyTorch. Serve a dire se il limite sta nel modello o nelle feature: con le 12 feature degli autori 0,86 contro 0,93 di Random Forest. Si riprova una volta con le feature nuove. PyTorch solo se si fa la rete profonda.
+**32. MLP: solo scikit-learn, una configurazione.** `MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=1000, random_state=42)` (senza early stopping, vedi decisione 42), senza prove di architetture e senza PyTorch. Serve a dire se il limite sta nel modello o nelle feature: con le 12 feature degli autori pareggia Random Forest (0,93 contro 0,93). Si riprova una volta con le feature nuove. PyTorch solo se si fa la rete profonda.
 
 **33. Parte 6 nel notebook 03:** le fasi intermedie si leggono solo per spiegare la differenza con il paper (pause e recupero = riposo, preparazione = stress; tutte le pause di una persona). Con tutto RF 0,81 (paper 0,77). Il lavoro resta sulle 4 fasi principali (decisione 30).
 ## Feature nuove (17 novembre)
@@ -98,6 +98,8 @@ Ogni scelta importante: cosa ho deciso e perché.
 **40. Variabilità del battito (PPG): documentata, non entra nel modello.** Il battito si vede bene nel PPG del polso quasi solo a riposo: finestre da 10 s con il battito visibile (più di metà dell'energia fra 0,5 e 4 Hz alla frequenza del cuore) riposo 71% · calcolo 15% · discorso 4% · corsa 3%, con risultati simili su tutti i canali (verde, rosso, infrarosso, `ppg3`). Anche gli intervalli del braccialetto (`rr_interval`) coprono il 85% del riposo, il 32% del calcolo, l'11% del discorso e lo 0% della corsa. Una colonna di variabilità del battito sarebbe piena a riposo e vuota o sbagliata sotto stress: il modello imparerebbe la qualità del segnale (cioè il movimento), non lo stress. È un limite del braccialetto da polso, da dichiarare nella tesi; spiega anche perché gli autori hanno scartato gli intervalli RR. Decisione mia, 19 novembre.
 
 **41. MLP con le feature nuove: in attesa.** Decisione mia, 19 novembre.
+
+**42. MLP senza early stopping** (22 novembre). Con `early_stopping=True` la rete mette da parte il 10% dei dati di addestramento per decidere quando fermarsi, e con circa 1.100 righe si fermava troppo presto: 0,86 invece di 0,93. Trovato confrontando il notebook del collega (stessa MLP, 0,93). Senza early stopping: accuracy 0,93 ± 0,07 (5 semi 0,92–0,93), recall riposo 0,95 · cognitivo 0,91 · fisico 0,94; solo fisiologia 0,75. Le conclusioni «la MLP è sotto Random Forest» e «è instabile» erano dovute a questa impostazione: la MLP **pareggia** Random Forest.
 
 ## Da decidere
 

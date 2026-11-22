@@ -222,3 +222,23 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 - La variabilità del battito resta documentata ma fuori dal modello (decisione 40): sarebbe una misura del movimento, non dello stress
 - MLP con le feature nuove: in attesa (decisione 41)
 
+---
+
+## 22 novembre — Correzione della MLP
+
+**Fatto**
+- Letto l'aggiornamento del collega (19 novembre): MLP, feature dai segnali grezzi, CNN 1D. Anche lui ha trovato che `temp_sk1` = `cbt`, ma ha tenuto `cbt` invece della temperatura della pelle
+- La sua MLP fa 0,93, la nostra 0,86: la causa era `early_stopping=True` (decisione 42). Tolto nel notebook 03 (Fase 22) e rieseguito
+
+**Risultati (ternario, MLP senza early stopping)**
+- Accuracy 0,93 ± 0,07, come Random Forest (0,93) e XGBoost (0,93); con 5 semi 0,92–0,93
+- Recall riposo 0,95 · cognitivo 0,91 · fisico 0,94; una sola persona sotto 0,80 (`a360c459`, 0,74)
+- Solo fisiologia 0,75 (Random Forest 0,74)
+- Con le feature nuove, senza movimento, prova veloce: MLP 0,80 contro Random Forest 0,83
+
+**Capito**
+- La MLP non è peggio dei classificatori classici: li pareggia. Un modello più complesso non aiuta, ma non perché la rete sia instabile
+
+**Prossimo passo**
+- Mandare l'aggiornamento alla prof e chiedere la call; parlare con il collega
+

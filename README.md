@@ -196,7 +196,7 @@ Rispondere sempre la classe più numerosa dà **0,36**.
 | LDA | 0,90 ± 0,07 | 0,76 | 0,89 ± 0,07 |
 | XGBoost | 0,93 ± 0,06 | 0,77 | 0,93 ± 0,07 |
 | kNN | 0,89 ± 0,11 | 0,76 | 0,89 ± 0,11 |
-| MLP (64, 32) | 0,86 ± 0,13 | — | 0,86 ± 0,13 |
+| MLP (64, 32) | 0,93 ± 0,07 | — | 0,93 ± 0,07 |
 
 Ripetendo Random Forest con 5 semi casuali diversi l'accuracy va da 0,93 a 0,94: differenze di un punto non vanno lette come miglioramenti.
 

@@ -47,7 +47,7 @@
 - **ablation per gruppi**: livello A (tutte / solo fisiologia / solo movimento), livello B (togli un gruppo alla volta)
 - notebook `03_ternario.ipynb`
 
-**Fatto (7 novembre, corretto il 16):** 21 persone, 1.170 righe; RF 0,93 ± 0,07, XGB 0,93, MLP 0,86; solo fisiologia 0,74 (cognitivo 0,67, fisico 0,64). Correzioni: `a5e823ad` ultimi 10 minuti del riposo, `ddca342b` assi Y e Z invertiti, pulsanti premuti più volte (`3f27501c`). Permutation importance (Fasi 20–21): contano postura, battito e agitazione. Parte 6: con pause, recupero e preparazione RF scende a 0,81 (paper 0,77), quindi la differenza si spiega probabilmente con le fasi incluse: restiamo sulle 4 fasi principali.
+**Fatto (7 novembre, corretto il 16):** 21 persone, 1.170 righe; RF 0,93 ± 0,07, XGB 0,93, MLP 0,93 (senza early stopping, corretta il 22); solo fisiologia 0,74 (cognitivo 0,67, fisico 0,64). Correzioni: `a5e823ad` ultimi 10 minuti del riposo, `ddca342b` assi Y e Z invertiti, pulsanti premuti più volte (`3f27501c`). Permutation importance (Fasi 20–21): contano postura, battito e agitazione. Parte 6: con pause, recupero e preparazione RF scende a 0,81 (paper 0,77), quindi la differenza si spiega probabilmente con le fasi incluse: restiamo sulle 4 fasi principali.
 
 ## Passo 4 — Feature dai dati grezzi (in corso, notebook 04)
 **Obiettivo:** il contributo nuovo del tirocinio, valutato sul ternario, sempre con e senza movimento.
@@ -65,7 +65,7 @@ Stessi blocchi da 30 s del notebook 03.
 **Fatto (19 novembre):** tre gruppi nel modello (magnitudine, temperatura, sudore), il quarto (PPG) documentato come limite.
 
 ## Passo 5 — MLP sul ternario
-- prima sulle 12 feature degli autori (0,86), poi con le feature nuove
+- prima sulle 12 feature degli autori (0,93, come Random Forest, senza early stopping), poi con le feature nuove
 - stessa validazione, confronto con i sei classificatori
 
 ## Passo 6 — Rete neurale profonda (opzionale)
