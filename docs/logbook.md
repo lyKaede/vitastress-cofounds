@@ -242,3 +242,22 @@ Una voce per sessione: cosa ho fatto, cosa ho scoperto, prossimo passo.
 **Prossimo passo**
 - Mandare l'aggiornamento alla prof e chiedere la call; parlare con il collega
 
+---
+
+## 23 novembre — MLP con le feature nuove
+
+**Fatto**
+- Notebook 04, Parte 8 (Fasi 20–22): la stessa MLP del notebook 03 accanto a Random Forest, sulle stesse prove con e senza movimento, con 5 semi e con il controllo cognitivo contro fisico
+
+**Risultati**
+- Senza movimento (media 5 semi): MLP 0,74 → 0,76 → **0,78**; Random Forest 0,75 → 0,80 → **0,83**
+- Cognitivo contro fisico senza riposo: MLP 0,72 → 0,73; Random Forest 0,72 → 0,78
+- Con la magnitudine: MLP 0,86, RF 0,90; con il movimento degli autori: tutte e due 0,93
+
+**Capito**
+- Con le feature degli autori MLP e Random Forest pareggiano; con le feature nuove Random Forest ne approfitta molto di più
+- Un modello più complesso non porta vantaggi su questi dati: il miglioramento viene dalle feature, e lo sfrutta meglio Random Forest
+
+**Prossimo passo**
+- Mandare l'aggiornamento alla prof e chiedere la call; parlare con il collega
+

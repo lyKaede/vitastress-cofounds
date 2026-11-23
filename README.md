@@ -2,7 +2,7 @@
 
 Tirocinio · Interfacce uomo-macchina · Università degli Studi dell'Insubria · 2026
 
-**Stato:** in corso. Binario replicato (passi 1 e 2); classificatore ternario, ablation e prima MLP fatti (passo 3). Feature dai segnali grezzi in corso (passo 4).
+**Stato:** in corso. Binario replicato (passi 1 e 2); classificatore ternario, ablation e prima MLP fatti (passo 3). Feature dai segnali grezzi (passo 4) e MLP con le feature nuove (passo 5) fatti.
 
 > **In breve**
 > - Il classificatore binario degli autori è **replicato**: Random Forest **0,93** contro l'**0,89** del paper.
@@ -29,7 +29,7 @@ Partendo dal dataset VitaStress e dal lavoro dei suoi autori, il progetto:
 | 2 | classificatore binario (sei modelli) | ✅ |
 | 3 | classificatore ternario, ablation, prima MLP | ✅ |
 | 4 | feature dai segnali grezzi | ✅ (3 gruppi nel modello, PPG documentato) |
-| 5 | MLP con le nuove feature | da fare |
+| 5 | MLP con le nuove feature | ✅ |
 | 6 | rete profonda sui segnali grezzi (opzionale) | da fare |
 | 7 | conclusioni e relazione | da fare |
 
@@ -337,27 +337,38 @@ Anche gli intervalli fra i battiti che il braccialetto calcola da solo spariscon
 Una colonna di variabilità del battito sarebbe piena a riposo e vuota o sbagliata sotto stress: il modello imparerebbe il movimento,
 non lo stress. Per questo resta **documentata ma fuori dal modello**: è un limite del braccialetto da polso.
 
+### La MLP con le feature nuove (passo 5)
+
+La stessa MLP del passo 3 (64 e 32 neuroni, senza early stopping), accanto a Random Forest sulle stesse prove:
+
+![MLP e Random Forest con le feature nuove](figures/feature_nuove_mlp_rf.png)
+
+| prova | MLP | Random Forest |
+|---|---|---|
+| senza movimento, fisiologia degli autori | 0,74 | 0,75 |
+| senza movimento, + temperatura della pelle | 0,76 | 0,80 |
+| **senza movimento, + temperatura + sudore grezzo** | **0,78** | **0,83** |
+| stress cognitivo contro fisico, senza riposo (con tutto) | 0,73 | 0,78 |
+| fisiologia nuova + magnitudine | 0,86 | 0,90 |
+| fisiologia + movimento degli autori | 0,93 | 0,93 |
+
+- Con le feature degli autori le due pareggiano; con le feature nuove **Random Forest ne approfitta molto di più**.
+- Un modello più complesso non porta vantaggi su questi dati: il miglioramento viene dalle feature.
+
 ---
 
 ## Domande aperte
 
 - **normalizzazione per persona**: dichiararla come limite o provare una variante con il solo riposo (calibrazione)?
-- finestre da **60 secondi** per le feature nuove: rifare anche la tabella degli autori con la stessa finestra?
 - la **rete profonda** sui segnali grezzi: ultimo capitolo, se c'è tempo.
 
 ## Prossimi passi
 
-**Passo 4 — Feature dai segnali grezzi**, un segnale alla volta:
+- aggiornamento e call con la prof (le domande sopra, più: va bene chiudere così il PPG?);
+- **passo 6**, rete profonda sui segnali grezzi: opzionale, da decidere con la prof;
+- **passo 7**, conclusioni e relazione.
 
-| segnale grezzo | feature | perché |
-|---|---|---|
-| `bioz` (25 Hz) | numero e ampiezza delle reazioni di sudore, livello di fondo | `stress_skin` del braccialetto è pieno di zeri |
-| PPG (62,5 Hz) | variabilità del battito: SDNN, RMSSD, pNN50 | il braccialetto perde gli intervalli fra battiti durante lo stress (mancanti 68–99,8%) |
-| `acc` (32 Hz) | magnitudine del movimento | non dipende dall'orientamento del polso |
-| temperatura (1 Hz) | media, deviazione standard, pendenza | andamento più fine di `temp_sk1` |
-
-Ordine: prima la magnitudine del movimento e la temperatura, poi il sudore, poi il PPG. Ogni gruppo nuovo entra nell'ablation, con e senza movimento.
-Poi **passo 5** (MLP con le nuove feature), **passo 6** (rete profonda, opzionale) e **passo 7** (conclusioni). Fine del lavoro sperimentale: 19 dicembre 2026.
+Fine del lavoro sperimentale: 19 dicembre 2026.
 
 ---
 
@@ -373,7 +384,7 @@ notebooks/
                                      differenza con il paper
   04_feature_nuove.ipynb             feature dai segnali grezzi (magnitudine, temperatura
                                      della pelle, sudore; qualità del PPG),
-                                     prove con e senza movimento
+                                     prove con e senza movimento, MLP
 docs/
   piano.md                           piano di lavoro
   feature_autori.md                  feature usate dagli autori

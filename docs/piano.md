@@ -64,8 +64,9 @@ Stessi blocchi da 30 s del notebook 03.
 
 **Fatto (19 novembre):** tre gruppi nel modello (magnitudine, temperatura, sudore), il quarto (PPG) documentato come limite.
 
-## Passo 5 — MLP sul ternario
+## Passo 5 — MLP sul ternario ✅
 - prima sulle 12 feature degli autori (0,93, come Random Forest, senza early stopping), poi con le feature nuove
+- **Fatto (23 novembre):** con le feature nuove, senza movimento, MLP 0,78 contro Random Forest 0,83; con il movimento 0,93 tutte e due. Le feature nuove aiutano soprattutto Random Forest
 - stessa validazione, confronto con i sei classificatori
 
 ## Passo 6 — Rete neurale profonda (opzionale)

@@ -97,9 +97,11 @@ Ogni scelta importante: cosa ho deciso e perché.
 
 **40. Variabilità del battito (PPG): documentata, non entra nel modello.** Il battito si vede bene nel PPG del polso quasi solo a riposo: finestre da 10 s con il battito visibile (più di metà dell'energia fra 0,5 e 4 Hz alla frequenza del cuore) riposo 71% · calcolo 15% · discorso 4% · corsa 3%, con risultati simili su tutti i canali (verde, rosso, infrarosso, `ppg3`). Anche gli intervalli del braccialetto (`rr_interval`) coprono il 85% del riposo, il 32% del calcolo, l'11% del discorso e lo 0% della corsa. Una colonna di variabilità del battito sarebbe piena a riposo e vuota o sbagliata sotto stress: il modello imparerebbe la qualità del segnale (cioè il movimento), non lo stress. È un limite del braccialetto da polso, da dichiarare nella tesi; spiega anche perché gli autori hanno scartato gli intervalli RR. Decisione mia, 19 novembre.
 
-**41. MLP con le feature nuove: in attesa.** Decisione mia, 19 novembre.
+**41. MLP con le feature nuove: in attesa.** Decisione mia, 19 novembre. Fatta il 23 novembre (decisione 43).
 
 **42. MLP senza early stopping** (22 novembre). Con `early_stopping=True` la rete mette da parte il 10% dei dati di addestramento per decidere quando fermarsi, e con circa 1.100 righe si fermava troppo presto: 0,86 invece di 0,93. Trovato confrontando il notebook del collega (stessa MLP, 0,93). Senza early stopping: accuracy 0,93 ± 0,07 (5 semi 0,92–0,93), recall riposo 0,95 · cognitivo 0,91 · fisico 0,94; solo fisiologia 0,75. Le conclusioni «la MLP è sotto Random Forest» e «è instabile» erano dovute a questa impostazione: la MLP **pareggia** Random Forest.
+
+**43. MLP con le feature nuove** (23 novembre, notebook 04 Parte 8). La stessa MLP del notebook 03 (64 e 32 neuroni, senza early stopping), sulle stesse prove di Random Forest. Senza movimento (media su 5 semi): fisiologia autori 0,74 · + temperatura 0,76 · + sudore **0,78** (Random Forest 0,75 · 0,80 · **0,83**). Cognitivo contro fisico senza riposo: 0,72 → 0,73 (Random Forest 0,72 → 0,78). Con la magnitudine 0,86 (RF 0,90); con il movimento degli autori 0,93 (RF 0,93). Le feature nuove aiutano soprattutto Random Forest: la MLP ne approfitta poco. In alcune prove la MLP arriva a 1.000 iterazioni senza convergere del tutto (`ConvergenceWarning`): l'avviso è silenziato. Nessuna altra configurazione provata (decisione 32).
 
 ## Da decidere
 
